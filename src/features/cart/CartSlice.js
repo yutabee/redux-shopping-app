@@ -19,11 +19,34 @@ const initialState = {
                     amount: 0,
                     total: 0,
                 };  //initialStateを空にする
-        },
-    },                //action creatorも含まれる
+            },
+            removeItem: (state, action) => {
+                // console.log(action);
+                const itemId = action.payload;
+                state.cartItems = state.cartItems.filter(item=>item.id!==itemId);
+            },
+            increase: (state, action) => {
+                const cartItem = state.cartItems.find((item) => item.id === action.payload);
+                cartItem.amount = cartItem.amount + 1;
+            },
+            decrease: (state, action) => {
+                const cartItem = state.cartItems.find((item) => item.id === action.payload);
+                cartItem.amount = cartItem.amount - 1;
+            },
+            calculateTotals: (state) => { //いつ発火させるの？       
+                let amount = 0;
+                let total = 0;
+                state.cartItems.forEach((item) => {
+                    amount += item.amount;
+                    total += item.amount * item.price;
+                });
+                state.amount = amount;
+                state.total = total;
+            }
+        },              //action creatorも含まれる
     });
     
 // console.log(cartSlice);
 
-export const { clearCart } = cartSlice.actions;
+export const { clearCart, removeItem, increase, decrease,calculateTotals} = cartSlice.actions;
 export default cartSlice.reducer;
